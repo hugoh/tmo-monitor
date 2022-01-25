@@ -1,5 +1,5 @@
 # tmo-monitor
-A lightweight, cross-platform Python 3 script that can monitor the T-Mobile Home Internet Nokia 5G Gateway for 4G/5G bands, cellular site (tower), and internet connectivity and reboots as needed or on-demand.
+A lightweight, cross-platform Python 3 script that can monitor the T-Mobile Home Internet Nokia and Arcadyan 5G Gateways for 4G/5G bands, cellular site (tower), and internet connectivity and reboots as needed or on-demand.
 
 By default, checks for n41 5G signal and connectivity to google.com via ping.
 
@@ -7,11 +7,21 @@ By default, checks for n41 5G signal and connectivity to google.com via ping.
 
 ### Install dependencies
 
-`pip3 install -r requirements.txt`
+`pip3 install .`
 
-### Mark as executable
+The command will then be available anywhere as `tmo-monitor.py`.
 
-`chmod +x ./tmo-monitor.py`
+#### Windows
+
+1. On Windows, open the folder where you downloaded the project.
+2. Click `File` > `Open Windows PowerShell`
+3. Run the above `pip3 install .` command.
+4. To use, either:
+    - Run `cmd.exe` within PowerShell first
+    - Open `cmd.exe` (Command Prompt) instead of PowerShell
+    - Run `python bin/tmo-monitor.py` in PowerShell from inside the project directory
+
+When in doubt, consult this document or run `tmo-monitor.py --help`.
 
 ## Usage
 
@@ -23,8 +33,9 @@ usage: tmo-monitor.py [-h] [-I INTERFACE] [-H PING_HOST]
                       [--skip-5g-bands] [--skip-ping] [--skip-enbid]
                       [--uptime UPTIME]
                       [-4 {B2,B4,B5,B12,B13,B25,B26,B41,B46,B48,B66,B71}]
-                      [-5 {n41,n71}] [--enbid ENBID] [--logfile LOGFILE]
+                      [-5 {n41,n71}] [--enbid ENBID] [--print-config] [--logfile LOGFILE]
                       [--log-all] [--log-delta]
+                      [--model {NOK5G21,ARCKVD21}]
                       [username] [password]
 
 Check T-Mobile Home Internet cellular band(s) and connectivity and reboot if
@@ -62,9 +73,18 @@ optional arguments:
   --logfile LOGFILE     output file for logging
   --log-all             always write connection details to logfile
   --log-delta           write connection details to logfile on change
+  --model {NOK5G21,ARCKVD21}
+                        the gateway model (defaults to NOK5G21)
 ```
 
 ## Options
+
+### Gateway Model
+**Gateway Model:** `--model`
+
+By default, the script will assume the silver-colored Nokia NOK5G21 gateway is being used.
+
+Valid values are `NOK5G21` for the Nokia gateway, or `ARCKVD21` for the square, black-colored Arcadyan gateway.
 
 ### Ping options
 **Interface:** `-I --interface`
@@ -149,6 +169,17 @@ Environment settings are meant to be declarative. They fall into four categories
 - General settings:
     - Default output/silent mode _(not yet implemented)_
     - Logging settings
+
+
+## Exit Status
+
+tmo-monitor uses the following exit status codes:
+
+- Clean execution: 0
+-  `GENERAL_ERROR`: 1
+-  `CONFIGURATION_ERROR`: 2
+-  `API_ERROR`: 3
+-  `REBOOT_PERFORMED`: 4
 
 
 ## Roadmap
