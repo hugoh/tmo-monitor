@@ -1,8 +1,1 @@
-certifi==2021.5.30
-charset-normalizer==2.0.6
-idna==3.2
-requests==2.26.0
-urllib3==1.26.7
-python-dotenv==0.19.2
-parse==1.19.0
-tailer==0.4.1
+requests

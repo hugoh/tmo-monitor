@@ -1,11 +1,9 @@
 import requests
 import sys
-import logging
 import math
-from .base import ControllerBase
 from ..status import ExitStatus
 
-class CubeController(ControllerBase):
+class CubeController:
   def __init__(self, username, password):
     self.username = username
     self.password = password
@@ -16,7 +14,7 @@ class CubeController(ControllerBase):
     try:
       login_request = requests.post('http://192.168.12.1/TMI/v1/auth/login', json={'username': self.username, 'password': self.password})
     except:
-      logging.critical("Could not post login request, exiting.")
+      print("Could not post login request, exiting.")
       sys.exit(ExitStatus.API_ERROR.value)
     login_request.raise_for_status()
     self.app_token = login_request.json()['auth']['token']
@@ -27,7 +25,7 @@ class CubeController(ControllerBase):
         self.login_app()
       stat_request = requests.get('http://192.168.12.1/TMI/v1/network/telemetry?get=all', headers={'Authorization': 'Bearer ' + self.app_token})
     except:
-      logging.critical("Could not query site info, exiting.")
+      print("Could not query site info, exiting.")
       sys.exit(ExitStatus.API_ERROR.value)
 
     stat_request.raise_for_status()
@@ -43,7 +41,7 @@ class CubeController(ControllerBase):
         self.login_app()
       reboot_request = requests.post('http://192.168.12.1/TMI/v1/gateway/reset?set=reboot', headers={'Authorization': 'Bearer ' + self.app_token})
     except:
-      logging.critical("Could not post reboot request, exiting.")
+      print("Could not post reboot request, exiting.")
       sys.exit(ExitStatus.API_ERROR.value)
     reboot_request.raise_for_status()
   # functions using authenticated web API endpoints
@@ -56,7 +54,7 @@ class CubeController(ControllerBase):
     try:
       signal_request = requests.get('http://192.168.12.1/TMI/v1/gateway?get=all')
     except:
-      logging.critical("Could not query signal status, exiting.")
+      print("Could not query signal status, exiting.")
       sys.exit(ExitStatus.API_ERROR.value)
     signal_request.raise_for_status()
     self.info_web = signal_request.json()
